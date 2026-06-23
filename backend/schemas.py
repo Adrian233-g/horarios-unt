@@ -243,6 +243,32 @@ class SemestreResponse(BaseModel):
 
 
 # ---------------------------------------------------------------------------
+# Curricula
+# ---------------------------------------------------------------------------
+
+class CurriculaCreate(BaseModel):
+    nombre: str
+    escuela_id: int
+    activa: bool = True
+
+
+class CurriculaUpdate(BaseModel):
+    nombre: str | None = None
+    escuela_id: int | None = None
+    activa: bool | None = None
+
+
+class CurriculaResponse(BaseModel):
+    id: int
+    nombre: str
+    escuela_id: int
+    activa: bool
+    escuela: EscuelaBasic
+
+    model_config = {"from_attributes": True}
+
+
+# ---------------------------------------------------------------------------
 # Curso
 # ---------------------------------------------------------------------------
 
@@ -256,7 +282,7 @@ class CursoCreate(BaseModel):
     num_alumnos: int
     tipo: TipoCursoEnum = TipoCursoEnum.obligatorio
     escuela_id: int
-    semestre_id: int
+    curricula_id: int
 
 
 class CursoUpdate(BaseModel):
@@ -270,7 +296,7 @@ class CursoUpdate(BaseModel):
     num_alumnos: int | None = None
     tipo: TipoCursoEnum | None = None
     escuela_id: int | None = None
-    semestre_id: int | None = None
+    curricula_id: int | None = None
     departamento_id: int | None = None
 
 
@@ -286,7 +312,7 @@ class CursoResponse(BaseModel):
     num_alumnos: int
     tipo: TipoCursoEnum
     escuela_id: int
-    semestre_id: int
+    curricula_id: int
     departamento_id: int | None = None
     escuela: EscuelaBasic
     departamento: DepartamentoBasic | None = None

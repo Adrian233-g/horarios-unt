@@ -7,7 +7,7 @@ load_dotenv()
 from routers import (
     auth, usuarios,
     facultades, departamentos, escuelas, aulas, laboratorios, docentes,
-    semestres, cursos, asignaciones, carga_no_lectiva,
+    semestres, cursos, asignaciones, carga_no_lectiva, curriculas,
 )
 from routers import horarios, documentos
 from ws_manager import manager as ws_manager
@@ -35,6 +35,7 @@ app.include_router(cursos.router)
 app.include_router(asignaciones.router)
 app.include_router(carga_no_lectiva.router)
 app.include_router(horarios.router)
+app.include_router(curriculas.router)
 app.include_router(documentos.router)
 
 

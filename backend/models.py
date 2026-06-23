@@ -128,6 +128,7 @@ class EscuelaProfesional(Base):
 
     departamento = relationship("Departamento", back_populates="escuelas")
     cursos = relationship("Curso", back_populates="escuela")
+    curriculas = relationship("Curricula", back_populates="escuela")
 
 
 class Docente(Base):
@@ -152,6 +153,18 @@ class Docente(Base):
     carga_no_lectiva = relationship("CargaNoLectiva", back_populates="docente")
 
 
+class Curricula(Base):
+    __tablename__ = "curricula"
+
+    id = Column(Integer, primary_key=True)
+    nombre = Column(String(255), nullable=False)
+    escuela_id = Column(Integer, ForeignKey("escuela_profesional.id"), nullable=False)
+    activa = Column(Boolean, default=True, nullable=False)
+
+    escuela = relationship("EscuelaProfesional", back_populates="curriculas")
+    cursos = relationship("Curso", back_populates="curricula")
+
+
 class Semestre(Base):
     __tablename__ = "semestre"
 
@@ -162,7 +175,6 @@ class Semestre(Base):
     fecha_fin = Column(Date, nullable=False)
     activo = Column(Boolean, default=False, nullable=False)
 
-    cursos = relationship("Curso", back_populates="semestre")
     asignaciones = relationship("AsignacionCarga", back_populates="semestre")
     bloques = relationship("BloqueHorario", back_populates="semestre")
     fase = relationship("FaseHorario", back_populates="semestre", uselist=False)
@@ -183,11 +195,11 @@ class Curso(Base):
     num_alumnos = Column(Integer, nullable=False)
     tipo = Column(Enum(TipoCursoEnum), default=TipoCursoEnum.obligatorio, nullable=False)
     escuela_id = Column(Integer, ForeignKey("escuela_profesional.id"), nullable=False)
-    semestre_id = Column(Integer, ForeignKey("semestre.id"), nullable=False)
+    curricula_id = Column(Integer, ForeignKey("curricula.id"), nullable=False)
     departamento_id = Column(Integer, ForeignKey("departamento.id"), nullable=True)
 
     escuela = relationship("EscuelaProfesional", back_populates="cursos")
-    semestre = relationship("Semestre", back_populates="cursos")
+    curricula = relationship("Curricula", back_populates="cursos")
     departamento = relationship("Departamento")
     asignaciones = relationship("AsignacionCarga", back_populates="curso")
 

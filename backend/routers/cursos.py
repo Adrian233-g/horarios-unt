@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session, joinedload
 
 from auth import require_director, require_secretaria
 from database import get_db
-from models import AsignacionCarga, Curso, EscuelaProfesional, Semestre, Usuario
+from models import AsignacionCarga, Curso, EscuelaProfesional, Curricula, Usuario
 from schemas import CursoCreate, CursoResponse, CursoUpdate
 
 router = APIRouter(prefix="/api/cursos", tags=["cursos"])
@@ -21,20 +21,14 @@ def _load_one(db: Session, curso_id: int) -> Curso | None:
 
 @router.get("", response_model=list[CursoResponse])
 def list_cursos(
+    curricula_id: int | None = None,
     db: Session = Depends(get_db),
     _: Usuario = Depends(require_secretaria),
 ):
-    semestre_activo = db.query(Semestre).filter(Semestre.activo == True).first()
-    if not semestre_activo:
-        return []
-    return (
-        db.query(Curso)
-        .options(joinedload(Curso.escuela))
-        .options(joinedload(Curso.departamento))
-        .filter(Curso.semestre_id == semestre_activo.id)
-        .order_by(Curso.ciclo, Curso.nombre)
-        .all()
-    )
+    query = db.query(Curso).options(joinedload(Curso.escuela)).options(joinedload(Curso.departamento))
+    if curricula_id:
+        query = query.filter(Curso.curricula_id == curricula_id)
+    return query.order_by(Curso.ciclo, Curso.nombre).all()
 
 
 @router.get("/{curso_id}", response_model=CursoResponse)
@@ -55,8 +49,8 @@ def create_curso(
     db: Session = Depends(get_db),
     _: Usuario = Depends(require_director),
 ):
-    if not db.query(Semestre).filter(Semestre.id == data.semestre_id).first():
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Semestre no encontrado")
+    if not db.query(Curricula).filter(Curricula.id == data.curricula_id).first():
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Curricula no encontrada")
     if not db.query(EscuelaProfesional).filter(EscuelaProfesional.id == data.escuela_id).first():
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Escuela no encontrada")
     if not 1 <= data.ciclo <= 10:
@@ -73,7 +67,7 @@ def create_curso(
         num_alumnos=data.num_alumnos,
         tipo=data.tipo,
         escuela_id=data.escuela_id,
-        semestre_id=data.semestre_id,
+        curricula_id=data.curricula_id,
         departamento_id=data.departamento_id,
     )
     db.add(curso)

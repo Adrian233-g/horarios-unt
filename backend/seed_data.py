@@ -7,7 +7,7 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 from database import SessionLocal
 from models import (
-    Usuario, Docente, Facultad, Departamento, EscuelaProfesional,
+    Usuario, Docente, Facultad, Departamento, EscuelaProfesional, Curricula,
     Semestre, Curso, Aula, Laboratorio, AsignacionCarga, TurnoLaboratorio,
     RolEnum, CondicionEnum, ModalidadEnum,
     SemestreNumeroEnum, TipoCursoEnum,
@@ -51,10 +51,14 @@ def run():
     db.flush()
 
     # ─────────────────────────────────────────
-    # ESCUELA
+    # ESCUELA Y CURRICULA
     # ─────────────────────────────────────────
     escuela = EscuelaProfesional(nombre="Ingeniería de Sistemas", departamento_id=dep_sis.id)
     db.add(escuela)
+    db.flush()
+
+    curricula = Curricula(nombre="Plan de Estudios 2018", escuela_id=escuela.id, activa=True)
+    db.add(curricula)
     db.flush()
 
     # ─────────────────────────────────────────
@@ -164,7 +168,7 @@ def run():
         c = Curso(codigo=codigo, nombre=nombre, ciclo=ciclo,
                   horas_teoria=ht, horas_practica=hp, horas_laboratorio=hl,
                   num_alumnos=40, escuela_id=escuela.id,
-                  semestre_id=semestre.id, tipo=tipo)
+                  curricula_id=curricula.id, tipo=tipo)
         db.add(c)
         db.flush()
         return c
