@@ -1,5 +1,5 @@
 const TOKEN_KEY = "unt_token";
-const API_BASE = "http://localhost:8000";
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
 function setCookie(name: string, value: string, days = 1) {
   const expires = new Date(Date.now() + days * 864e5).toUTCString();

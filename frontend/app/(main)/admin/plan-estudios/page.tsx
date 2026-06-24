@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { apiFetch } from "@/lib/api";
+import { Plus, Pencil, Trash2, BookOpen, Clock, FileDown } from "lucide-react";
+import { apiFetch, API_BASE } from "@/lib/api";
 import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from "@/components/ui/select";
@@ -186,7 +187,7 @@ export default function PlanEstudiosPage() {
   async function handleDownloadPDF() {
     try {
       const token = localStorage.getItem("unt_token");
-      const res = await fetch(`http://localhost:8000/api/documentos/plan-estudios/pdf`, {
+      const res = await fetch(`${API_BASE}/api/documentos/plan-estudios/pdf`, {
         headers: {
           Authorization: `Bearer ${token}`
         }

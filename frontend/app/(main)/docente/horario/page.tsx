@@ -6,6 +6,7 @@ import {
   PointerSensor, useSensor, useSensors,
 } from "@dnd-kit/core";
 import { useDraggable, useDroppable } from "@dnd-kit/core";
+import { X, Calendar } from "lucide-react";
 import { apiFetch, API_BASE } from "@/lib/api";
 
 // ---------------------------------------------------------------------------
@@ -308,7 +309,8 @@ export default function DocenteHorarioPage() {
   }, [fetchMiTurno]);
 
   useEffect(() => {
-    const ws = new WebSocket("ws://localhost:8000/ws/horarios");
+    const wsUrl = API_BASE.replace(/^http/, 'ws') + "/ws/horarios";
+    const ws = new WebSocket(wsUrl);
     ws.onmessage = (event) => {
       const data = JSON.parse(event.data);
       if (data.tipo === "bloque_added") {

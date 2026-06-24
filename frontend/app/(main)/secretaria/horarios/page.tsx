@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
-import { apiFetch } from "@/lib/api";
+import { apiFetch, API_BASE } from "@/lib/api";
 
 interface DocenteBasic { id: number; nombre: string; apellidos: string; modalidad: string }
 interface ColaItem { id: number; orden: number; estado: string; turno_inicio: string | null; turno_fin: string | null; docente: DocenteBasic }
@@ -48,7 +48,8 @@ export default function SecretariaHorariosPage() {
   useEffect(() => { loadData(); }, []);
 
   useEffect(() => {
-    const ws = new WebSocket("ws://localhost:8000/ws/horarios");
+    const wsUrl = API_BASE.replace(/^http/, 'ws') + "/ws/horarios";
+    const ws = new WebSocket(wsUrl);
     ws.onmessage = (event) => {
       const data = JSON.parse(event.data);
       if (data.tipo === "fase_iniciada" || data.tipo === "turno_avanzado") {
