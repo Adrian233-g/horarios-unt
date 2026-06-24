@@ -12,7 +12,17 @@ from routers import (
 from routers import horarios, documentos
 from ws_manager import manager as ws_manager
 
-app = FastAPI(title="Generador Horarios UNT", version="0.1.0")
+from seed_data import run as run_seed_data
+
+app = FastAPI(title="UNT Horarios API")
+
+@app.get("/api/seed_database_secret")
+def seed_db():
+    try:
+        run_seed_data()
+        return {"msg": "Base de datos poblada exitosamente"}
+    except Exception as e:
+        return {"error": str(e)}
 
 app.add_middleware(
     CORSMiddleware,
