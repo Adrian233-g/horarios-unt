@@ -6,7 +6,10 @@ import seed_data
 
 def reset():
     print("Dropping all tables...")
-    Base.metadata.drop_all(bind=engine)
+    try:
+        Base.metadata.drop_all(bind=engine)
+    except Exception as e:
+        print(f"Error dropping tables: {e}")
     print("Creating all tables...")
     Base.metadata.create_all(bind=engine)
     print("Running seed...")
