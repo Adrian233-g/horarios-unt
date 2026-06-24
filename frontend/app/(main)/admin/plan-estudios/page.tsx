@@ -307,7 +307,7 @@ export default function PlanEstudiosPage() {
               </div>
               <div className="space-y-1.5">
                 <label className="block text-xs font-medium text-zinc-500 dark:text-zinc-400">Tipo de Curso</label>
-                <Select value={form.tipo} onValueChange={(v) => setForm({ ...form, tipo: v })}>
+                <Select value={form.tipo} onValueChange={(v) => setForm({ ...form, tipo: v || "" })}>
                   <SelectTrigger className="h-9 text-sm"><SelectValue /></SelectTrigger>
                   <SelectContent>
                     <SelectItem value="obligatorio">Obligatorio (OB)</SelectItem>
@@ -346,7 +346,7 @@ export default function PlanEstudiosPage() {
 
               <div className="col-span-2 space-y-1.5">
                 <label className="block text-xs font-medium text-zinc-500 dark:text-zinc-400">Escuela Profesional (Programa)</label>
-                <Select value={form.escuela_id} onValueChange={(v) => setForm({ ...form, escuela_id: v })}>
+                <Select value={form.escuela_id} onValueChange={(v) => setForm({ ...form, escuela_id: v || "" })}>
                   <SelectTrigger className="h-9 text-sm"><SelectValue placeholder="Seleccionar escuela" /></SelectTrigger>
                   <SelectContent>{escuelas.map((e) => <SelectItem key={e.id} value={e.id.toString()}>{e.nombre}</SelectItem>)}</SelectContent>
                 </Select>
@@ -354,7 +354,7 @@ export default function PlanEstudiosPage() {
 
               <div className="col-span-2 space-y-1.5">
                 <label className="block text-xs font-medium text-zinc-500 dark:text-zinc-400">Departamento Responsable (Opcional)</label>
-                <Select value={form.departamento_id} onValueChange={(v) => setForm({ ...form, departamento_id: v === "none" ? "" : v })}>
+                <Select value={form.departamento_id} onValueChange={(v) => setForm({ ...form, departamento_id: v === "none" || !v ? "" : v })}>
                   <SelectTrigger className="h-9 text-sm">
                     <SelectValue placeholder="Seleccionar departamento">{form.departamento_id ? departamentos.find(d => d.id.toString() === form.departamento_id)?.nombre : "Ninguno"}</SelectValue>
                   </SelectTrigger>
