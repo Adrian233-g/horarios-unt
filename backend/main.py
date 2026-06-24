@@ -12,15 +12,15 @@ from routers import (
 from routers import horarios, documentos
 from ws_manager import manager as ws_manager
 
-from seed_data import run as run_seed_data
+from reset_db import reset as reset_database
 
 app = FastAPI(title="UNT Horarios API")
 
 @app.get("/api/seed_database_secret")
 def seed_db():
     try:
-        run_seed_data()
-        return {"msg": "Base de datos poblada exitosamente"}
+        reset_database()
+        return {"msg": "Base de datos creada y poblada exitosamente"}
     except Exception as e:
         return {"error": str(e)}
 
